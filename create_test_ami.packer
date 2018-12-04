@@ -1,0 +1,43 @@
+{
+  "builders": [{
+  "type": "amazon-ebs",
+  "region": "us-west-2",
+  "source_ami_filter": {
+    "filters": {
+      "virtualization-type": "hvm",
+      "name": "amzn2-ami-hvm-*",
+      "root-device-type": "ebs"
+    },
+    "owners": ["137112412989"],
+    "most_recent": true
+  },
+  "instance_type": "t2.medium",
+  "ssh_username": "ec2-user",
+  "associate_public_ip_address": "true",
+  "ssh_interface": "private_ip",
+  "subnet_id": "subnet-a29cdfc7",
+  "security_group_id": "sg-0c5e0268", 
+  "ami_name": "test-ami-{{timestamp}}",
+  "ami_description": "Base AMI for all monitoring applications"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh"
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest-test.json",
+      "strip_path": true
+    },
+    {
+      "type": "shell-local",
+      "script": "./post-provision.sh"
+    }
+  ]
+}
